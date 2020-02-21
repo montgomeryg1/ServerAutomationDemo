@@ -25,7 +25,8 @@ describe 'Template validation' {
                     'contentVersion',
                     'outputs',
                     'parameters',
-                    'resources'                                
+                    'resources',
+                    'variables'                               
           $templateProperties = $template | Get-Member -MemberType NoteProperty | % Name
           $templateProperties | Should Be $Elements
     }
