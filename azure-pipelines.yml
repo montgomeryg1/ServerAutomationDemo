@@ -26,16 +26,19 @@ steps:
     inputs:
       filePath: "connect-azure.ps1"
       arguments: '-ServicePrincipalPassword "$(ServerAutomationDemo-AppPw)" -SubscriptionId $(subscription_id) -ApplicationId $(application_id) -TenantId $(tenant_id)'
+      
   - task: PowerShell@2
     inputs:
       targetType: "inline"
       script: New-AzResourceGroup -Name $(azure_resource_group_name) -Location northeurope -Force
+
   - task: Pester@0
     inputs:
       scriptFolder: "@{Path='$(System.DefaultWorkingDirectory)/server.template.tests.ps1'; Parameters=@{ResourceGroupName='$(azure_resource_group_name)'}}"
       resultsFile: "$(System.DefaultWorkingDirectory)/server.template.tests.XML"
       usePSCore: true
       run32Bit: False
+
   - task: AzureResourceManagerTemplateDeployment@3
     inputs:
       deploymentScope: "Resource Group"
@@ -43,22 +46,25 @@ steps:
       subscriptionId: "$(subscription_id)"
       action: "Create Or Update Resource Group"
       resourceGroupName: $(azure_resource_group_name)
-      location: "East US"
+      location: "North Europe"
       templateLocation: "Linked artifact"
       csmFile: "server.json"
       csmParametersFile: "server.parameters.json"
       deploymentMode: "Incremental"
       deploymentOutputs: "arm_output"
+
   - task: Pester@0
     inputs:
       scriptFolder: "@{Path='$(System.DefaultWorkingDirectory)/server.infrastructure.tests.ps1'; Parameters=@{ArmDeploymentJsonOutput='$(arm_output)'}}"
       resultsFile: "$(System.DefaultWorkingDirectory)/server.infrastructure.tests.XML"
       usePSCore: true
       run32Bit: False
+
   - task: PowerShell@2
     inputs:
       targetType: "inline"
       script: Get-AzResourceGroup -Name $(azure_resource_group_name) | Remove-AzResourceGroup -Force
+  
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: "NUnit"
