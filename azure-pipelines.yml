@@ -23,16 +23,19 @@ variables:
 
 steps:
   - task: PowerShell@2
+    name: 'Connect_to_azure'
     inputs:
       filePath: "connect-azure.ps1"
       arguments: '-ServicePrincipalPassword "$(ServerAutomationDemo-AppPw)" -SubscriptionId $(subscription_id) -ApplicationId $(application_id) -TenantId $(tenant_id)'
-      
+
   - task: PowerShell@2
+    name: 'Create_resource_group'
     inputs:
       targetType: "inline"
       script: New-AzResourceGroup -Name $(azure_resource_group_name) -Location northeurope -Force
 
   - task: Pester@0
+    name: 'Validate_ARM_template'
     inputs:
       scriptFolder: "@{Path='$(System.DefaultWorkingDirectory)/server.template.tests.ps1'; Parameters=@{ResourceGroupName='$(azure_resource_group_name)'}}"
       resultsFile: "$(System.DefaultWorkingDirectory)/server.template.tests.XML"
@@ -61,6 +64,7 @@ steps:
       run32Bit: False
 
   - task: PowerShell@2
+    name: Remove_resource_group
     inputs:
       targetType: "inline"
       script: Get-AzResourceGroup -Name $(azure_resource_group_name) | Remove-AzResourceGroup -Force
