@@ -15,11 +15,11 @@ variables:
   - name: azure_resource_group_name
     value: "ServerProvisionTesting-$(Build.BuildId)"
   - name: subscription_id
-    value: "XXXXXXXXXXXXXXXXXXXXXXXXXX"
+    value: "60020c84-fca0-4d3b-ab6a-502ba1028851"
   - name: application_id
-    value: "XXXXXXXXXXXXXXXXXXXXXXXXXX"
+    value: "5305bcc1-1bf5-4af7-b7b9-b9440b2ff28e"
   - name: tenant_id
-    value: "XXXXXXXXXXXXXXXXXXXXXXXXXX"
+    value: "244126a8-5f50-4bbd-843f-add51306a77b"
 
 steps:
   - task: PowerShell@2
