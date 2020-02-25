@@ -22,13 +22,13 @@ describe 'Template validation' {
 
     It "Contains all required elements" {
         $Elements = '$schema',
-                    'contentVersion',
-                    'outputs',
-                    'parameters',
-                    'resources',
-                    'variables'                               
-          $templateProperties = $template | Get-Member -MemberType NoteProperty | % Name
-          $templateProperties | Should Be $Elements
+        'contentVersion',
+        'outputs',
+        'parameters',
+        'resources',
+        'variables'                               
+        $templateProperties = $template | Get-Member -MemberType NoteProperty | % Name
+        $templateProperties | Should Be $Elements
     }
 
     it 'template passes validation check' {
